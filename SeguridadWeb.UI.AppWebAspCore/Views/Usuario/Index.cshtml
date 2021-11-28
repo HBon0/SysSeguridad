@@ -1,14 +1,12 @@
 ﻿@model IEnumerable<SeguridadWeb.EntidadesDeNegocio.Usuario>
 
-@{
-    ViewData["Title"] = "Index";
-    int numPage = 1;
-    int numRegistros = 0;
-    int numRegistrosPorPage = 10;
-    int[] tops = { 10, 20, 50, 100, 500, 1000, 10000, -1 };
-    int topActual = Convert.ToInt32(ViewBag.Top);
-    List<SeguridadWeb.EntidadesDeNegocio.Rol> roles = ViewBag.Roles as List<SeguridadWeb.EntidadesDeNegocio.Rol>;
-}
+@{ ViewData["Title"] = "Index";
+                int numPage = 1;
+                int numRegistros = 0;
+                int numRegistrosPorPage = 10;
+                int[] tops = { 10, 20, 50, 100, 500, 1000, 10000, -1 };
+                int topActual = Convert.ToInt32(ViewBag.Top);
+                List<SeguridadWeb.EntidadesDeNegocio.Rol> roles = ViewBag.Roles as List<SeguridadWeb.EntidadesDeNegocio.Rol>; }
 <h1>Buscar</h1>
 <div class="row">
     <div class="col-md-12">
@@ -50,15 +48,14 @@
                         <input type="date" name="fechaRegistro" class="form-control" />
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
                         <label class="control-label">Rol</label>
-                        <select name="idRol" class="form-control">
+                        <select id="SelectRoles" name="idRol" class="form-control">
                             <option selected value="0">SELECCIONAR</option>
                             @foreach (var item in roles)
                             {
-                                <option value="@item.Id">@item.Nombre</option>
-                            }
+                <option value="@item.Id">@item.Nombre</option>}
                         </select>
                     </div>
                 </div>
@@ -71,14 +68,20 @@
                                 string strItem = item != -1 ? item.ToString() : "Todos";
                                 if (item != topActual)
                                 {
-                                    <option value="@item">@strItem</option>
-                                }
+                <option value="@item">@strItem</option> }
                                 else
                                 {
-                                    <option selected value="@item">@strItem</option>
-                                }
+                <option selected value="@item">@strItem</option>}
                             }
                         </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label class="control-label">Roles</label>
+                            <input id="Roles" type="text" name="autocomRoles" class="form-control" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -116,71 +119,74 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr data-page="@numPage">
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Apellido)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Login)
-                </td>
-                @if (item.Estatus == 1)
-                {
-                    <td>ACTIVO</td>
-                }
+<tr data-page="@numPage">
+    <td>
+        @Html.DisplayFor(modelItem => item.Nombre)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Apellido)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Login)
+    </td>
+    @if (item.Estatus == 1)
+    {
+<td>ACTIVO</td> }
                 else if (item.Estatus == 2)
                 {
-                    <td>INACTIVO</td>
-                }
+<td>INACTIVO</td> }
                 else
                 {
-                    <td></td>
+<td></td>                }
+    <td>
+        @Html.DisplayFor(modelItem => item.Rol.Nombre)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.FechaRegistro)
+    </td>
+    <td class="botonestabla">
+        @Html.ActionLink("Modificar", "Edit", new { id = item.Id }, new { @class = "btn btn-success" })
+    </td>
+    <td class="botonestabla">
+        @Html.ActionLink("Ver", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
+    </td>
+    <td class="botonestabla">
+        @Html.ActionLink("Eliminar", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+    </td>
+</tr>numRegistros++;
+                if (numRegistros == numRegistrosPorPage)
+                {
+                    numPage++;
+                    numRegistros = 0;
                 }
-                <td>
-                    @Html.DisplayFor(modelItem => item.Rol.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FechaRegistro)
-                </td>
-                <td class="botonestabla">
-                    @Html.ActionLink("Modificar", "Edit", new { id = item.Id }, new { @class = "btn btn-success" })
-                </td>
-                <td class="botonestabla">
-                    @Html.ActionLink("Ver", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
-                </td>
-                <td class="botonestabla">
-                    @Html.ActionLink("Eliminar", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
-                </td>
-            </tr>
-            numRegistros++;
-            if (numRegistros == numRegistrosPorPage)
-            {
-                numPage++;
-                numRegistros = 0;
             }
-        }
-        @{
-            if (numRegistros == 0)
-            {
-                numPage--;
-            }
-        }
+        @{ if (numRegistros == 0)
+                        {
+                            numPage--;
+                        } }
     </tbody>
 </table>
 @if (numPage > 1)
 {
-    <div class="row" style="overflow:auto">
-        <div class="col-md-12">
-            <ul class="pagination paginationjs" data-numpage="@numPage" data-pageactive="1">
-                <li class="page-item" data-typepage="Previous"><a class="page-link" href="#">Previous</a></li>
-                @for (var i = 1; i <= numPage; i++)
-                {
-                    <li class="page-item" data-page="@i" data-typepage="Item"><a class="page-link" href="#">@i</a></li>
-                }
-                <li class="page-item" data-typepage="Next"><a class="page-link" href="#">Next</a></li>
-            </ul>
-        </div>
+<div class="row" style="overflow:auto">
+    <div class="col-md-12">
+        <ul class="pagination paginationjs" data-numpage="@numPage" data-pageactive="1">
+            <li class="page-item" data-typepage="Previous"><a class="page-link" href="#">Previous</a></li>
+            @for (var i = 1; i <= numPage; i++)
+            {
+<li class="page-item" data-page="@i" data-typepage="Item"><a class="page-link" href="#">@i</a></li>                }
+            <li class="page-item" data-typepage="Next"><a class="page-link" href="#">Next</a></li>
+        </ul>
     </div>
+</div>}
+
+@section scripts{
+    <script>
+
+        $("#Roles").autocomplete({
+            source: '@Url.Action("GetRoles", "Usuario")',
+            minLength: 2 
+        });
+    </script>
+
 }

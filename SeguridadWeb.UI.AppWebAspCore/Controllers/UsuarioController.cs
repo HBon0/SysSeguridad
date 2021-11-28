@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 /********************************/
+using Microsoft.EntityFrameworkCore;
 using SeguridadWeb.EntidadesDeNegocio;
 using SeguridadWeb.LogicaDeNegocio;
 using Microsoft.AspNetCore.Authorization;
@@ -18,6 +19,7 @@ namespace SeguridadWeb.UI.AppWebAspCore.Controllers
     //[Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public class UsuarioController : Controller
     {
+
         UsuarioBL usuarioBL = new UsuarioBL();
         RolBL rolBL = new RolBL();
         // GET: UsuarioController
@@ -35,6 +37,34 @@ namespace SeguridadWeb.UI.AppWebAspCore.Controllers
             ViewBag.Top = pUsuario.Top_Aux;
             ViewBag.Roles = await taskObtenerTodosRoles;
             return View(usuarios);
+        }
+        public async Task<IActionResult> GetRoles(string term)
+        {
+            //List<Rol> listaRoles = new List<Rol>()
+            //{
+            //    new Rol {Id = 1, Nombre="Linda"},
+            //    new Rol {Id = 2, Nombre="Hector"},
+            //    new Rol {Id = 3, Nombre="Juan"},
+            //    new Rol {Id = 4, Nombre="Raul"},
+            //    new Rol {Id = 5, Nombre="Willieam"},
+            //    new Rol {Id = 6, Nombre="Saul"},
+            //    new Rol {Id = 7, Nombre="Andy"}
+            //};
+
+            //var result = (from U in listaRoles
+            //              where U.Nombre.Contains(term, System.StringComparison.CurrentCultureIgnoreCase)
+            //              select new { value = U.Nombre }
+            //              );
+
+            var roles = new List<Rol>();
+            roles = await rolBL.ObtenerTodosAsync();
+
+            var result = (from U in roles
+                          where U.Nombre.Contains(term, System.StringComparison.CurrentCultureIgnoreCase)
+                          select new { value = U.Nombre }
+                          );
+
+            return Json(result);
         }
 
         // GET: UsuarioController/Details/5
