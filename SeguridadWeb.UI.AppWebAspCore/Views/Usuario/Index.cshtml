@@ -48,17 +48,7 @@
                         <input type="date" name="fechaRegistro" class="form-control" />
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label class="control-label">Rol</label>
-                        <select id="SelectRoles" name="idRol" class="form-control">
-                            <option selected value="0">SELECCIONAR</option>
-                            @foreach (var item in roles)
-                            {
-                <option value="@item.Id">@item.Nombre</option>}
-                        </select>
-                    </div>
-                </div>
+                
                 <div class="col-md-2">
                     <div class="form-group">
                         <label class="control-label">Top</label>
@@ -185,7 +175,7 @@
 
         $("#Roles").autocomplete({
             source: '@Url.Action("GetRoles", "Usuario")',
-            minLength: 2 
+            minLength: 1
         });
     </script>
 
